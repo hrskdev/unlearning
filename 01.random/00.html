@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>01.random 01</title>
+<style>
+body{
+	overflow: hidden;
+	background: #F0F0F0;
+}
+canvas{
+	position: fixed;
+	left: 50%;
+	top: 50%;
+	width: 300px;
+	height: 300px;
+	transform: translate( -50%, -50% );
+	border: 1px solid #999;
+	background: #F0F0F0;
+	z-index: -1;
+}
+
+pre{
+	padding: 10px;
+	background: rgba(0,0,0,0.1);
+	border-radius: 3px;
+	font-size: 0.625em;
+}
+</style>
+</head>
+<body>
+<p>01.random 01</p>
+<pre>//	0.0 ~ 1.0
+let value = Math.random();</pre>
+<canvas></canvas>
+<script type="text/javascript">
+
+function randomGenerate()
+{
+	return Math.random();
+}
+	
+window.addEventListener( 'DOMContentLoaded', ()=>{
+
+	//	view size
+	let scale = 300;
+
+	//	dom setting
+	let _canvas = document.querySelector('canvas');
+	_canvas.width = _canvas.height = scale;
+	let _ctx = _canvas.getContext('2d');
+
+	//	management list
+	let _list = [];
+
+	//	initialize
+	for( var i = 0; i < scale; i++ )
+	{
+		//	random value
+		let _value = randomGenerate();
+		_list.push( _value );
+	}
+
+	let _update = ()=>
+	{
+		//	loop
+		window.requestAnimationFrame( _update );
+
+		//	random value
+		let _value = randomGenerate();
+		_list.push( _value );
+
+		if( _list.length >= scale )
+		{
+			_list.shift();
+		}
+
+		_ctx.clearRect( 0, 0, scale, scale );
+		_ctx.fillStyle = 0x999999
+
+		let len = _list.length;
+		while( len )
+		{
+			len--;
+			_ctx.fillRect( len, _list[len] * scale, 3, 3 );
+		}
+		_ctx.fill();
+
+		//	view grid
+		_ctx.beginPath();
+		_ctx.fillText( '0.0', 8, 16 );
+		_ctx.fillText( '1.0', 8, scale - 8 );
+		_ctx.fillText( '0.5', 8, scale * 0.5 + 0.8 );
+		_ctx.fill();
+
+		_ctx.beginPath();
+		_ctx.strokeStyle = 'rgba(0,0,0,0.2)';
+		_ctx.lineWidth = 1;
+		_ctx.moveTo( 0, scale * 0.25 );
+		_ctx.lineTo( scale, scale * 0.25 );
+		_ctx.moveTo( 0, scale * 0.5 );
+		_ctx.lineTo( scale, scale * 0.5 );
+		_ctx.moveTo( 0, scale * 0.75 );
+		_ctx.lineTo( scale, scale * 0.75 );
+		_ctx.stroke();
+
+	}
+	_update();
+
+})
+
+</script>
+</body>
+</html>
